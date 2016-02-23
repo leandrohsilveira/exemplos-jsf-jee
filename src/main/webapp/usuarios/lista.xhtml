@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" 
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" 
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
+	
+	<ui:composition template="/template.xhtml">
+		
+		<f:metadata>
+			<f:viewAction action="#{usuariosProvider.initListarUsuarios()}" />
+		</f:metadata>
+		
+		<ui:define name="conteudo">
+			<f:view transient="true">
+				<h:messages styleClass="mensagens-globais" />
+				
+				<a jsf:outcome="formulario.jsf">Novo Usuário</a>
+				<br />
+				<h:dataTable value="#{usuariosProvider.usuarios}" var="usuario">
+					<h:column>
+						<f:facet name="header">Nome</f:facet>
+						${usuario.nome}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Login</f:facet>						
+						#{usuario.login}
+					</h:column>
+					<h:column>
+						<a jsf:outcome="formulario.jsf">
+							Editar
+							<f:param name="u" value="#{usuario.id}" />
+						</a>
+					</h:column>
+				</h:dataTable>
+				
+				
+			</f:view>
+		</ui:define>
+		
+	</ui:composition>
+</html>
