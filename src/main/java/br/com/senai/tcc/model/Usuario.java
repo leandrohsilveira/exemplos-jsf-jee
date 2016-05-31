@@ -1,8 +1,12 @@
 package br.com.senai.tcc.model;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotNull;
 
-public class Usuario {
+public class Usuario implements Serializable {
+
+	private static final long serialVersionUID = 1064048757496573495L;
 
 	private Long id;
 

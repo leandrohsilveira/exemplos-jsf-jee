@@ -1,10 +1,11 @@
 package br.com.senai.tcc.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 import br.com.senai.tcc.model.Usuario;
 
-public interface UsuarioDAO {
+public interface UsuarioDAO extends Serializable {
 
 	void salvar(Usuario usuario);
 

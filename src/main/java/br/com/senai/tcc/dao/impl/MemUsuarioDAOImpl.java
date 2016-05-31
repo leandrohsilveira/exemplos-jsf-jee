@@ -7,16 +7,28 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.Stateful;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import br.com.senai.tcc.dao.UsuarioDAO;
+import br.com.senai.tcc.jms.UsuarioMessageService;
 import br.com.senai.tcc.model.Usuario;
 
+@Stateful
 @Singleton
 public class MemUsuarioDAOImpl implements UsuarioDAO {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -8550555529366657788L;
+
 	private Long sequence = 1l;
 	private Map<Long, Usuario> usuarios;
+
+	@Inject
+	private UsuarioMessageService messageService;
 
 	@PostConstruct
 	private void init() {
@@ -31,6 +43,7 @@ public class MemUsuarioDAOImpl implements UsuarioDAO {
 			sequence = sequence + 1;
 		}
 		usuarios.put(u.getId(), u);
+		messageService.broadcast(u);
 	}
 
 	@Override
