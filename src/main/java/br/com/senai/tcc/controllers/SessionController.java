@@ -3,6 +3,7 @@ package br.com.senai.tcc.controllers;
 import java.io.Serializable;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 @Named("sessionController")
@@ -19,6 +20,10 @@ public class SessionController implements Serializable {
 
 	public void setSessionName(String sessionName) {
 		this.sessionName = sessionName;
+	}
+
+	public void invalidate() {
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	}
 
 }

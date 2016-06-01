@@ -11,8 +11,10 @@ import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
+
 import br.com.senai.tcc.dao.UsuarioDAO;
-import br.com.senai.tcc.jms.UsuarioMessageService;
+import br.com.senai.tcc.eventbus.UsuarioMessageService;
 import br.com.senai.tcc.model.Usuario;
 
 @Stateful
@@ -26,6 +28,9 @@ public class MemUsuarioDAOImpl implements UsuarioDAO {
 
 	private Long sequence = 1l;
 	private Map<Long, Usuario> usuarios;
+
+	@Inject
+	private Logger log;
 
 	@Inject
 	private UsuarioMessageService messageService;
@@ -43,6 +48,7 @@ public class MemUsuarioDAOImpl implements UsuarioDAO {
 			sequence = sequence + 1;
 		}
 		usuarios.put(u.getId(), u);
+		log.info("{} com id {} persistido.", u.getClass().getSimpleName(), u.getId());
 		messageService.broadcast(u);
 	}
 

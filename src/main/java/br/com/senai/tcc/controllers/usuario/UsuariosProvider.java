@@ -4,35 +4,50 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.MessageDriven;
-import javax.faces.bean.ViewScoped;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.jms.Message;
-import javax.jms.MessageListener;
+
+import org.slf4j.Logger;
 
 import br.com.senai.tcc.dao.UsuarioDAO;
-import br.com.senai.tcc.jms.MessageService;
-import br.com.senai.tcc.jms.UsuarioMessageService;
+import br.com.senai.tcc.eventbus.UsuarioMessageService;
+import br.com.senai.tcc.eventbus.events.UsuarioMessageEvent;
 import br.com.senai.tcc.model.Usuario;
 
+import com.google.common.eventbus.Subscribe;
+
 @Named
-@ViewScoped
-@MessageDriven(activationConfig = {
-		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = MessageService.QUEUE_LOOKUP),
-		@ActivationConfigProperty(propertyName = "destination", propertyValue = UsuarioMessageService.DESTINATION_LOOKUP) })
-public class UsuariosProvider implements Serializable, MessageListener {
+@SessionScoped
+public class UsuariosProvider implements Serializable, UsuarioMessageEvent {
 
 	private static final long serialVersionUID = 5179957765595619662L;
 
 	@Inject
+	private Logger log;
+
+	@Inject
 	private UsuarioDAO usuarioDAO;
+
+	@Inject
+	private UsuarioMessageService usuarioMessageService;
 
 	private List<Usuario> usuarios;
 
 	@PostConstruct
-	public void initListarUsuarios() {
+	private void postConstruct() {
+		log.info("Instance {} created ", this);
+		init();
+	}
+
+	public void init() {
+		recuperarLista();
+		usuarioMessageService.subscribe(this);
+	}
+
+	private void recuperarLista() {
 		usuarios = usuarioDAO.buscarTodos();
 	}
 
@@ -40,9 +55,17 @@ public class UsuariosProvider implements Serializable, MessageListener {
 		return usuarios;
 	}
 
+	@Subscribe
 	@Override
-	public void onMessage(Message message) {
-		initListarUsuarios();
+	public void onMessage(Usuario object) {
+		log.info("Mensagem de evento capturada pelo listener {} para sessão {}", this, FacesContext.getCurrentInstance().getExternalContext().getSessionId(false));
+		recuperarLista();
+	}
+
+	@PreDestroy
+	private void preDestroy() {
+		log.info("Instance {} id about to be destroyed.", this);
+		usuarioMessageService.unsubscribe(this);
 	}
 
 }

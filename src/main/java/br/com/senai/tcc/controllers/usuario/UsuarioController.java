@@ -80,7 +80,7 @@ public class UsuarioController implements Serializable {
 		return usuario;
 	}
 
-	public String salvar(Usuario usuario) {
+	public String salvar() {
 		usuarioDAO.salvar(get());
 		return "/usuarios/lista.jsf?faces-redirect=true";
 	}

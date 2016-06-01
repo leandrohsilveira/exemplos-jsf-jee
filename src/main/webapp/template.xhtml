@@ -18,7 +18,10 @@
 		<h1>Exemplos de JSF 2.2 com JEE 7</h1>
 		<br />
 		<hr />
-		<a class="menu-item" jsf:outcome="/usuarios/lista.jsf">Usuários</a>
+		<form jsf:id="menuForm" prependId="false">
+			<a class="menu-item" jsf:outcome="/usuarios/lista.jsf">Usuários</a>
+			<a class="menu-item" jsf:action="#{sessionController.invalidate()}">Finalizar Sessão</a>
+		</form>
 		<hr />
 		<ui:insert name="conteudo" />
 	</h:body>
