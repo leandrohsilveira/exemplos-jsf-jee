@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:composition template="../template.xhtml">
+		<ui:define name="conteudo">
+			<f:view id="listaView">
+				<p:socket channel="/usuario">
+					<p:ajax event="message" update="corpo" />
+				</p:socket>
+				<h:panelGroup id="corpo" layout="block">
+					<h:messages styleClass="mensagens-globais" />
+					
+					<h:link outcome="formulario.jsf">Novo Usuário</h:link>
+					<br />
+					<h:dataTable value="#{usuariosProvider.usuarios}" var="usuario">
+						<h:column>
+							<f:facet name="header">Nome</f:facet>
+							${usuario.nome}
+						</h:column>
+						<h:column>
+							<f:facet name="header">Login</f:facet>						
+							#{usuario.login}
+						</h:column>
+						<h:column>
+							<h:link outcome="formulario.jsf">
+								Editar
+								<f:param name="u" value="#{usuario.id}" />
+							</h:link>
+						</h:column>
+					</h:dataTable>
+				</h:panelGroup>
+				
+				
+			</f:view>
+		</ui:define>
+		
+	</ui:composition>
+</html>

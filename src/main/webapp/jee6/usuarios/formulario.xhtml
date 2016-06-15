@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html">
+	
+	<ui:composition template="../template.xhtml">
+		
+		<f:metadata>
+			<f:viewParam name="u" value="#{usuarioController.id}" />
+		</f:metadata>
+		
+		<ui:define name="conteudo">
+			<f:view transient="true" beforePhase="#{usuarioController.init}">
+				<h:messages styleClass="mensagens-globais" />
+				
+				
+				<h:form id="usuarioForm" prependId="false">
+					
+					<h:inputHidden value="#{usuarioController.id}" />
+					
+					<label for="nome">Nome:</label>
+					<h:inputText id="nome" value="#{usuarioController.nome}" />
+					<br />
+					
+					<label for="login">Login:</label>
+					<h:inputText id="login" value="#{usuarioController.login}" />
+					<br />
+					
+					<label for="senha">Senha:</label>
+					<h:inputSecret id="password" value="#{usuarioController.senha}" />
+					<br />
+					
+					<h:commandButton action="#{usuarioController.salvar()}" value="Salvar" />
+					<h:button outcome="lista.jsf" value="Cancelar" />
+				</h:form>				
+			</f:view>
+		</ui:define>
+		
+	</ui:composition>
+</html>

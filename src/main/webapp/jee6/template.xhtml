@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html">
+	
+	<h:head>
+		<meta charset="UTF-8" />
+		<title>Exemplos de JSF 2.1 com JEE 6</title>
+		<style>
+			.menu-item {
+				margin-left: 7px;
+			}
+		</style>
+	</h:head>
+	<h:body>
+		<h1>Exemplos de JSF 2.1 com JEE 6</h1>
+		<br />
+		<hr />
+		<h:form id="menuForm" prependId="false">
+			<h:link styleClass="menu-item" outcome="/#{pages}/usuarios/lista.jsf">Usuários</h:link>
+			<h:commandLink styleClass="menu-item" action="#{sessionController.invalidate()}">Finalizar Sessão</h:commandLink>
+		</h:form>
+		<hr />
+		<ui:insert name="conteudo" />
+	</h:body>
+</html>

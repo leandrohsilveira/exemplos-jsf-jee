@@ -3,9 +3,13 @@ package br.com.senai.tcc.controllers.usuario;
 import java.io.Serializable;
 
 import javax.enterprise.context.RequestScoped;
+import javax.faces.event.PhaseEvent;
+import javax.faces.event.PhaseId;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
+
+import org.primefaces.push.EventBusFactory;
 
 import br.com.senai.tcc.dao.UsuarioDAO;
 import br.com.senai.tcc.model.Usuario;
@@ -19,6 +23,10 @@ public class UsuarioController implements Serializable {
 	private Long id;
 
 	@Inject
+	@Named("pages")
+	private String pagesDir;
+
+	@Inject
 	private UsuarioDAO usuarioDAO;
 
 	@NotNull
@@ -29,6 +37,11 @@ public class UsuarioController implements Serializable {
 
 	@NotNull
 	private String senha;
+
+	public void init(PhaseEvent event) {
+		if (!event.getFacesContext().isPostback() && PhaseId.RENDER_RESPONSE == event.getPhaseId())
+			carregarUsuario();
+	}
 
 	public Long getId() {
 		return id;
@@ -81,8 +94,10 @@ public class UsuarioController implements Serializable {
 	}
 
 	public String salvar() {
-		usuarioDAO.salvar(get());
-		return "/usuarios/lista.jsf?faces-redirect=true";
+		Usuario usuario = get();
+		usuarioDAO.salvar(usuario);
+		EventBusFactory.getDefault().eventBus().publish("/usuario", usuario);
+		return String.format("/%s/usuarios/lista.jsf?faces-redirect=true", pagesDir);
 	}
 
 }

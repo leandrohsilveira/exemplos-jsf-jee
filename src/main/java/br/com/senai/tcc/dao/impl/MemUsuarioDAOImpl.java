@@ -14,7 +14,6 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 
 import br.com.senai.tcc.dao.UsuarioDAO;
-import br.com.senai.tcc.eventbus.UsuarioMessageService;
 import br.com.senai.tcc.model.Usuario;
 
 @Stateful
@@ -32,8 +31,8 @@ public class MemUsuarioDAOImpl implements UsuarioDAO {
 	@Inject
 	private Logger log;
 
-	@Inject
-	private UsuarioMessageService messageService;
+	// @Inject
+	// private UsuarioPushChannel pushChannel;
 
 	@PostConstruct
 	private void init() {
@@ -49,7 +48,7 @@ public class MemUsuarioDAOImpl implements UsuarioDAO {
 		}
 		usuarios.put(u.getId(), u);
 		log.info("{} com id {} persistido.", u.getClass().getSimpleName(), u.getId());
-		messageService.broadcast(u);
+		// pushChannel.publish(u);
 	}
 
 	@Override
@@ -61,9 +60,8 @@ public class MemUsuarioDAOImpl implements UsuarioDAO {
 	public Usuario getPorLogin(String login) {
 		for (Entry<Long, Usuario> entry : usuarios.entrySet()) {
 			Usuario usuario = entry.getValue();
-			if (usuario.getLogin().equals(login)) {
+			if (usuario.getLogin().equals(login))
 				return usuario;
-			}
 		}
 		return null;
 	}
@@ -72,9 +70,8 @@ public class MemUsuarioDAOImpl implements UsuarioDAO {
 	public Usuario getPorLoginSenha(String login, String senha) {
 		for (Entry<Long, Usuario> entry : usuarios.entrySet()) {
 			Usuario usuario = entry.getValue();
-			if (usuario.getLogin().equals(login) && usuario.getSenha().equals(senha)) {
+			if (usuario.getLogin().equals(login) && usuario.getSenha().equals(senha))
 				return usuario;
-			}
 		}
 		return null;
 	}
@@ -82,9 +79,8 @@ public class MemUsuarioDAOImpl implements UsuarioDAO {
 	@Override
 	public List<Usuario> buscarTodos() {
 		List<Usuario> lista = new ArrayList<Usuario>();
-		for (Entry<Long, Usuario> entry : usuarios.entrySet()) {
+		for (Entry<Long, Usuario> entry : usuarios.entrySet())
 			lista.add(entry.getValue());
-		}
 		return lista;
 	}
 
